@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { CdkDropListGroup } from '@angular/cdk/drag-drop';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { KanbanBoardStore, KanbanColumn, KanbanTask } from '../../store/kanban-board.store';
 import { KanbanColumnComponent } from './kanban-column/kanban-column.component';
