@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { TaskDialogService } from '../../../features/dashboard/services/task-dialog.service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NavItem } from '../../../models/nav-item.model';
 
@@ -19,11 +20,14 @@ export class SidebarComponent {
   /** Navigation items to render */
   readonly navItems = input.required<NavItem[]>();
 
+  private readonly taskDialogService = inject(TaskDialogService);
+
   /** Emitted when the "+ New Task" button is clicked */
   readonly newTaskClicked = output<void>();
 
   /** Handles the + New Task button click */
   protected onNewTaskClick(): void {
+    this.taskDialogService.openAddTaskDialog();
     this.newTaskClicked.emit();
   }
 }

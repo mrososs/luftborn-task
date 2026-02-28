@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { KanbanBoardStore, KanbanColumn, KanbanTask } from '../../store/kanban-board.store';
 import { KanbanColumnComponent } from './kanban-column/kanban-column.component';
+import { TaskDialogService } from '../../services/task-dialog.service';
 
 /**
  * Kanban board (Smart Component).
@@ -16,14 +17,12 @@ import { KanbanColumnComponent } from './kanban-column/kanban-column.component';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [KanbanColumnComponent, MatIconModule, CdkDropListGroup],
-  providers: [KanbanBoardStore],
   templateUrl: './kanban-board.component.html',
   styleUrl: './kanban-board.component.scss',
 })
 export class KanbanBoardComponent {
   protected readonly store = inject(KanbanBoardStore);
-  private readonly dialog = inject(MatDialog);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly taskDialogService = inject(TaskDialogService);
 
   /** Active board filter passed from the dashboard page */
   readonly activeFilter = input<string>('all');
@@ -62,22 +61,9 @@ export class KanbanBoardComponent {
   }
 
   /**
-   * Opens the Add Task dialog.
-   * Lazily imports the dialog component for optimal bundle splitting.
+   * Opens the Add Task dialog using the shared service.
    */
   openAddTaskDialog(): void {
-    import('./kanban-add-task-dialog/kanban-add-task-dialog.component').then(
-      ({ KanbanAddTaskDialogComponent }) => {
-        this.dialog
-          .open(KanbanAddTaskDialogComponent, { width: '480px', disableClose: false })
-          .afterClosed()
-          .subscribe((payload) => {
-            if (payload) {
-              this.store.addTask(payload);
-              this.snackBar.open('✅ Task created successfully!', 'OK', { duration: 3000 });
-            }
-          });
-      },
-    );
+    this.taskDialogService.openAddTaskDialog();
   }
 }

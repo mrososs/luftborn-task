@@ -160,6 +160,7 @@ const INITIAL_STATE: KanbanBoardState = {
  * patchState is used to update state immutably.
  */
 export const KanbanBoardStore = signalStore(
+  { providedIn: 'root' },
   withState<KanbanBoardState>(INITIAL_STATE),
 
   withComputed((store) => ({
