@@ -1,0 +1,15 @@
+<button
+  class="custom-btn custom-btn--{{ variant() }}"
+  [type]="type()"
+  [disabled]="disabled()"
+  [attr.aria-label]="label() || icon()"
+  matRipple
+  (click)="handleClick()"
+>
+  @if (icon()) {
+    <mat-icon class="custom-btn__icon" aria-hidden="true">{{ icon() }}</mat-icon>
+  }
+  @if (label()) {
+    <span class="custom-btn__label">{{ label() }}</span>
+  }
+</button>

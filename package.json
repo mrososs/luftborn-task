@@ -6,7 +6,10 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "lint": "ng lint",
+    "format": "prettier --write \"src/**/*.{ts,html,scss}\"",
+    "prepare": "husky"
   },
   "prettier": {
     "printWidth": 100,
@@ -23,12 +26,18 @@
   "private": true,
   "packageManager": "npm@11.7.0",
   "dependencies": {
+    "@angular/animations": "^21.2.0",
+    "@angular/cdk": "~21.2.0",
     "@angular/common": "^21.0.0",
     "@angular/compiler": "^21.0.0",
     "@angular/core": "^21.0.0",
     "@angular/forms": "^21.0.0",
+    "@angular/material": "~21.2.0",
     "@angular/platform-browser": "^21.0.0",
     "@angular/router": "^21.0.0",
+    "@ngrx/signals": "^21.0.1",
+    "chart.js": "^4.5.1",
+    "ng2-charts": "^8.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -36,11 +45,20 @@
     "@angular/build": "^21.0.0",
     "@angular/cli": "^21.0.0",
     "@angular/compiler-cli": "^21.0.0",
+    "@angular/material": "^21.2.0",
     "@tailwindcss/postcss": "^4.1.12",
+    "angular-eslint": "21.2.0",
+    "angular-in-memory-web-api": "^0.21.0",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "husky": "^9.1.7",
     "jsdom": "^27.1.0",
     "postcss": "^8.5.3",
+    "prettier": "^3.8.1",
     "tailwindcss": "^4.1.12",
     "typescript": "~5.9.2",
+    "typescript-eslint": "8.50.1",
     "vitest": "^4.0.8"
   }
 }

@@ -1,3 +1,93 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "tailwindcss";
+@import 'tailwindcss';
+
+/*
+ * Design Token System
+ * Derived from Figma: "senior - frontend" (node 1:962 over-view)
+ *   Denim          → #196BD2  (Primary blue — buttons, active nav, logo)
+ *   Alto           → #E0E0E0  (Border grey — inputs, dividers)
+ *   White Catskill → #F5F7FA  (Page background)
+ *   Shadow         → 0 2px 4px rgba(0,0,0,0.08)
+ */
+:root {
+  /* Brand */
+  --color-primary: #196bd2;
+  --color-primary-dark: #1254a7;
+
+  /* Surfaces */
+  --color-white: #ffffff;
+  --color-bg-page: #f5f7fa;
+  --color-bg-hover: #f0f4fb;
+
+  /* Borders */
+  --color-border: #e0e0e0;
+
+  /* Text */
+  --color-text-dark: #2d2d2d;
+  --color-text-muted: #6b7280;
+
+  /* Semantic */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  /* Shadows */
+  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+  /* Radii */
+  --radius-card: 8px;
+  --radius-btn: 4px;
+  --radius-full: 9999px;
+
+  /* Layout */
+  --sidebar-width: 240px;
+  --header-height: 64px;
+}
+
+/* Base reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-bg-page);
+  color: var(--color-text-dark);
+  font-family:
+    'Inter',
+    'Roboto',
+    system-ui,
+    -apple-system,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom thin scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* Material Snackbar status colours */
+.snack-error .mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: #ef4444;
+}
+.snack-success .mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: #22c55e;
+}

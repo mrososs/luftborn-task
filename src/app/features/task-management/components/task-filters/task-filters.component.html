@@ -1,0 +1,29 @@
+<div class="task-filters" role="search" aria-label="Filter tasks">
+  <app-search-input placeholder="Search tasks..." (searchChange)="onSearchChange($event)" />
+
+  <mat-form-field appearance="outline" class="task-filters__select">
+    <mat-label>Status</mat-label>
+    <mat-select [value]="filters().status ?? ''" (selectionChange)="onStatusChange($event.value)">
+      @for (opt of statusOptions; track opt.value) {
+        <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="task-filters__select">
+    <mat-label>Priority</mat-label>
+    <mat-select
+      [value]="filters().priority ?? ''"
+      (selectionChange)="onPriorityChange($event.value)"
+    >
+      @for (opt of priorityOptions; track opt.value) {
+        <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="task-filters__actions">
+    <app-custom-button label="Reset" variant="outline" (clicked)="resetFilters()" />
+    <app-custom-button label="Apply" variant="primary" (clicked)="applyFilters()" />
+  </div>
+</div>

@@ -1,0 +1,74 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon class="dialog-title__icon">add_task</mat-icon>
+  Create New Task
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="form" id="add-task-form" (ngSubmit)="onSubmit()">
+    <!-- Title -->
+    <mat-form-field appearance="outline" class="dialog-content__field">
+      <mat-label>Task Title</mat-label>
+      <input
+        matInput
+        formControlName="title"
+        placeholder="e.g. Fix login bug"
+        autocomplete="off"
+        aria-required="true"
+      />
+      @if (form.get('title')?.touched && titleError) {
+        <mat-error>{{ titleError }}</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Description -->
+    <mat-form-field appearance="outline" class="dialog-content__field">
+      <mat-label>Description (optional)</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        rows="3"
+        placeholder="Add more details..."
+      ></textarea>
+    </mat-form-field>
+
+    <!-- Priority -->
+    <mat-form-field appearance="outline" class="dialog-content__field">
+      <mat-label>Priority</mat-label>
+      <mat-select formControlName="priority" aria-required="true">
+        @for (opt of priorityOptions; track opt.value) {
+          <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Assignee -->
+    <mat-form-field appearance="outline" class="dialog-content__field">
+      <mat-label>Assignee Name (optional)</mat-label>
+      <input matInput formControlName="assigneeName" placeholder="e.g. Sarah" autocomplete="off" />
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button
+    mat-stroked-button
+    type="button"
+    class="dialog-actions__cancel"
+    aria-label="Cancel and close dialog"
+    (click)="onCancel()"
+  >
+    Cancel
+  </button>
+  <button
+    mat-flat-button
+    color="primary"
+    type="submit"
+    form="add-task-form"
+    class="dialog-actions__submit"
+    aria-label="Create task"
+    (click)="onSubmit()"
+  >
+    <mat-icon>add</mat-icon>
+    Create Task
+  </button>
+</mat-dialog-actions>

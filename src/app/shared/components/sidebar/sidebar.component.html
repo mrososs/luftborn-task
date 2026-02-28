@@ -1,0 +1,56 @@
+<nav
+  class="flex flex-col h-full py-6 px-4 bg-white shadow-[0_2px_4px_rgba(0,0,0,0.08)]"
+  aria-label="Main navigation"
+>
+  <!-- Navigation items list -->
+  <ul class="flex flex-col gap-0.5 list-none m-0 p-0 flex-1" role="list">
+    @for (item of navItems(); track item.route + item.label) {
+      <li>
+        @if (!item.disabled) {
+          <a
+            class="flex items-center gap-2 px-4 py-2 rounded text-[#212121] text-sm font-normal no-underline transition-all duration-150 ease-in-out hover:bg-[#E8F0FE] hover:text-[#1976D3] focus-visible:outline-2 focus-visible:outline-[#1976D3] focus-visible:outline-offset-2"
+            [routerLink]="item.route"
+            routerLinkActive="!bg-[#1976D3] !text-white font-medium"
+            [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+            [attr.aria-label]="item.label"
+          >
+            <span class="text-base leading-none select-none" aria-hidden="true">{{
+              item.emoji
+            }}</span>
+            <span class="text-[13px]">{{ item.label }}</span>
+            @if (item.badge) {
+              <span
+                class="ml-auto inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-[#1976D3] text-white text-[10px] font-bold"
+                [attr.aria-label]="item.badge + ' pending items'"
+              >
+                {{ item.badge }}
+              </span>
+            }
+          </a>
+        } @else {
+          <!-- Disabled / placeholder nav item -->
+          <span
+            class="flex items-center gap-2 px-4 py-2 rounded text-[#9CA3AF] text-sm cursor-default select-none"
+            [attr.aria-label]="item.label + ' (coming soon)'"
+          >
+            <span class="text-base leading-none" aria-hidden="true">{{ item.emoji }}</span>
+            <span class="text-[13px]">{{ item.label }}</span>
+          </span>
+        }
+      </li>
+    }
+  </ul>
+
+  <!-- + New Task CTA button — Figma Aside bottom CTA -->
+  <div class="pt-4 mt-auto border-t border-[#F0F0F0]">
+    <button
+      class="flex items-center justify-center gap-2 w-full py-2.5 px-4 bg-[#1976D3] text-white text-sm font-semibold rounded cursor-pointer border-none transition-all duration-150 ease-in-out hover:bg-[#1254a7] hover:shadow-[0_4px_12px_rgba(25,118,211,0.35)] focus-visible:outline-2 focus-visible:outline-[#1976D3] focus-visible:outline-offset-2"
+      type="button"
+      aria-label="Create a new task"
+      (click)="onNewTaskClick()"
+    >
+      <span class="text-xl leading-none" aria-hidden="true">+</span>
+      <span>New Task</span>
+    </button>
+  </div>
+</nav>

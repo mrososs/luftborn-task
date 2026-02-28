@@ -1,0 +1,43 @@
+<section class="flex flex-col gap-6" aria-label="Dashboard overview">
+  <!-- Stats overview row -->
+  <app-stats-overview [stats]="stats" />
+
+  <!-- Board toolbar: filter tabs + New Task button -->
+  <div
+    class="flex items-center justify-between flex-wrap gap-3"
+    role="toolbar"
+    aria-label="Task board controls"
+  >
+    <mat-button-toggle-group
+      class="dashboard-filters"
+      [value]="activeFilter()"
+      (change)="onFilterChange($event.value)"
+      aria-label="Filter tasks by status"
+      hideSingleSelectionIndicator
+    >
+      @for (tab of filterTabs; track tab.value) {
+        <mat-button-toggle [value]="tab.value" [attr.aria-label]="tab.label">
+          {{ tab.label }}
+        </mat-button-toggle>
+      }
+    </mat-button-toggle-group>
+
+    <div class="flex items-center gap-2">
+      <button
+        mat-flat-button
+        color="primary"
+        class="!font-semibold !rounded-lg"
+        aria-label="Create a new task"
+        (click)="openAddTaskDialog()"
+      >
+        <mat-icon>add</mat-icon>
+        New Task
+      </button>
+    </div>
+  </div>
+
+  <!-- Kanban board -->
+  <div class="min-h-[400px]">
+    <app-kanban-board [activeFilter]="activeFilter()" />
+  </div>
+</section>

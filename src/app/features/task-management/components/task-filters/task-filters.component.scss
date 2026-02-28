@@ -1,0 +1,26 @@
+.task-filters {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background-color: var(--color-white);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  flex-wrap: wrap;
+
+  &__select {
+    min-width: 160px;
+    flex-shrink: 0;
+
+    // Override Material outline density
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+  }
+}

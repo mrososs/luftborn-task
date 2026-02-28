@@ -1,0 +1,7 @@
+<div class="flex gap-6 flex-wrap" role="list" aria-label="Key performance indicators">
+  @for (card of stats(); track card.label) {
+    <div class="flex-1 min-w-[160px]" role="listitem">
+      <app-stat-card [card]="card" />
+    </div>
+  }
+</div>

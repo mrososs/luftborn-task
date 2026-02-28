@@ -1,0 +1,44 @@
+<article
+  class="flex items-start gap-4 p-5 rounded-lg bg-white shadow-[0_2px_4px_rgba(0,0,0,0.08)] flex-1 min-w-[160px]"
+  [attr.aria-label]="card().label + ': ' + card().value"
+>
+  <!-- Icon wrapper: color by colorClass -->
+  <div
+    class="inline-flex items-center justify-center w-11 h-11 rounded-full shrink-0"
+    [class.bg-[#1976D3]]="card().colorClass === 'primary'"
+    [class.bg-[#22C55E]]="card().colorClass === 'success'"
+    [class.bg-[#F59E0B]]="card().colorClass === 'warning'"
+    [class.bg-[#EF4444]]="card().colorClass === 'danger'"
+    aria-hidden="true"
+  >
+    @if (card().icon) {
+      <mat-icon class="!text-[22px] !w-[22px] !h-[22px] text-white">{{ card().icon }}</mat-icon>
+    }
+  </div>
+
+  <!-- Content -->
+  <div class="flex flex-col gap-0.5">
+    <span class="text-[1.6rem] font-bold text-[#2D2D2D] leading-none">{{ card().value }}</span>
+    <span class="text-[0.8rem] text-[#6B7280] font-medium">{{ card().label }}</span>
+    @if (card().trend) {
+      <span
+        class="inline-flex items-center gap-0.5 text-xs font-semibold mt-1"
+        [class.text-[#22C55E]]="card().trend === 'up'"
+        [class.text-[#EF4444]]="card().trend === 'down'"
+        [class.text-[#6B7280]]="card().trend === 'neutral'"
+        [attr.aria-label]="card().trendPercent + '% ' + card().trend"
+      >
+        <mat-icon class="!text-[14px] !w-3.5 !h-3.5">
+          {{
+            card().trend === 'up'
+              ? 'arrow_upward'
+              : card().trend === 'down'
+                ? 'arrow_downward'
+                : 'remove'
+          }}
+        </mat-icon>
+        {{ card().trendPercent }}%
+      </span>
+    }
+  </div>
+</article>

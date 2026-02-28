@@ -1,0 +1,109 @@
+/**
+ * Global Design Token System
+ * Derived from Figma file: "senior - frontend" (node 1:962 over-view)
+ *
+ * Color references from Figma styles:
+ *   - Denim:             #196BD2  (Primary blue — buttons, logo, active nav)
+ *   - White:             #FFFFFF  (Cards, header, sidebar backgrounds)
+ *   - Alto:              #E0E0E0  (Borders, input strokes)
+ *   - White Catskill:    #F5F7FA  (Page background)
+ *
+ * Shadow reference from Figma:
+ *   - Drop shadow on all cards/panels: 0 2px 4px rgba(0,0,0,0.08)
+ */
+
+:root {
+  /* ---- Brand / Primary ---- */
+  --color-primary: #196bd2; /* Denim */
+  --color-primary-light: color-mix(in srgb, #196bd2 15%, transparent);
+  --color-primary-dark: color-mix(in srgb, #196bd2 80%, black);
+
+  /* ---- Surfaces ---- */
+  --color-white: #ffffff; /* Card/sidebar backgrounds */
+  --color-bg-page: #f5f7fa; /* White Catskill White — page background */
+  --color-bg-hover: #f0f4fb; /* Subtle hover state */
+
+  /* ---- Borders ---- */
+  --color-border: #e0e0e0; /* Alto — input borders, dividers */
+
+  /* ---- Text ---- */
+  --color-text-dark: #2d2d2d;
+  --color-text-muted: #6b7280;
+  --color-text-on-primary: #ffffff;
+
+  /* ---- Semantic ---- */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #3b82f6;
+
+  /* ---- Shadows (from Figma drop-shadow style) ---- */
+  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+  /* ---- Border Radii ---- */
+  --radius-card: 8px; /* Cards, panels */
+  --radius-btn: 4px; /* Buttons, inputs */
+  --radius-full: 9999px; /* Pills, badges */
+
+  /* ---- Spacing ---- */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+
+  /* ---- Layout ---- */
+  --sidebar-width: 240px;
+  --header-height: 64px;
+}
+
+/* ---- Global Reset & Base ---- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-bg-page);
+  color: var(--color-text-dark);
+  font-family:
+    'Inter',
+    'Roboto',
+    system-ui,
+    -apple-system,
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Material Snackbar Status Classes ---- */
+.snack-error .mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: #ef4444;
+}
+
+.snack-success .mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: #22c55e;
+}
+
+/* ---- Scroll ---- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}

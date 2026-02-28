@@ -1,0 +1,33 @@
+<section class="analytics-page" aria-label="Analytics">
+  <h1 class="analytics-page__title">Analytics</h1>
+
+  @if (store.isLoading()) {
+    <app-skeleton-card aria-label="Loading analytics..." />
+  } @else if (store.error()) {
+    <p class="analytics-page__error" role="alert">Failed to load analytics. Please try again.</p>
+  } @else {
+    <div class="analytics-page__grid">
+      <!-- Summary KPIs -->
+      <div class="analytics-page__kpi-row">
+        <div class="analytics-page__kpi-card">
+          <span class="analytics-page__kpi-value">{{ store.data()?.completionRate ?? 0 }}%</span>
+          <span class="analytics-page__kpi-label">Completion Rate</span>
+        </div>
+        <div class="analytics-page__kpi-card">
+          <span class="analytics-page__kpi-value">{{
+            store.data()?.averageCompletionDays ?? 0
+          }}</span>
+          <span class="analytics-page__kpi-label">Avg. Days to Complete</span>
+        </div>
+      </div>
+
+      <!-- Charts placeholder — implement with ng2-charts -->
+      <div class="analytics-page__chart-placeholder" aria-label="Task completion trend chart">
+        <p>Task Completion Trend — Chart (ng2-charts)</p>
+      </div>
+      <div class="analytics-page__chart-placeholder" aria-label="Priority breakdown chart">
+        <p>Priority Breakdown — Chart (ng2-charts)</p>
+      </div>
+    </div>
+  }
+</section>

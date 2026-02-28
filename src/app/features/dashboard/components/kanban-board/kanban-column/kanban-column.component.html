@@ -1,0 +1,57 @@
+<section
+  class="flex flex-col min-w-[300px] flex-1 bg-[#F8F9FB] rounded-[10px] pb-3 min-h-[500px]"
+  [attr.aria-label]="columnLabel() + ' column'"
+>
+  <!-- Column header -->
+  <header class="flex items-center justify-between px-4 py-3.5 border-b border-[#EBEBEB] mb-2">
+    <div class="flex items-center gap-2">
+      <!-- Status dot: color changes per column -->
+      <span
+        class="w-2.5 h-2.5 rounded-full shrink-0"
+        [class.bg-[#6B7280]]="columnId() === 'todo'"
+        [class.bg-[#F59E0B]]="columnId() === 'in-progress'"
+        [class.bg-[#10B981]]="columnId() === 'done'"
+        aria-hidden="true"
+      ></span>
+      <h2 class="text-[0.8rem] font-bold tracking-[0.8px] uppercase text-[#374151] m-0">
+        {{ columnLabel() }}
+      </h2>
+    </div>
+    <span
+      class="bg-[#E5E7EB] text-[#374151] text-xs font-bold rounded-full py-0.5 px-2.5 min-w-[28px] text-center"
+      [attr.aria-label]="tasks().length + ' tasks'"
+    >
+      {{ tasks().length }}
+    </span>
+  </header>
+
+  <!-- CDK Drop list -->
+  <div
+    [id]="columnId()"
+    cdkDropList
+    [cdkDropListData]="tasks()"
+    [cdkDropListConnectedTo]="connectedTo()"
+    class="flex-1 px-3 py-1 flex flex-col gap-3 min-h-[200px] transition-colors duration-200 cdk-drop-zone"
+    (cdkDropListDropped)="onDrop($event)"
+    [attr.aria-label]="'Drop zone for ' + columnLabel()"
+  >
+    @for (task of tasks(); track task.id) {
+      <div cdkDrag [cdkDragData]="task" class="block">
+        <app-task-card [task]="task" />
+        <ng-template cdkDragPlaceholder>
+          <div class="h-20 border-2 border-dashed border-[#1976D3] bg-[#E8F0FE] rounded-lg"></div>
+        </ng-template>
+      </div>
+    }
+
+    @if (tasks().length === 0) {
+      <div
+        class="flex flex-col items-center justify-center gap-2 py-8 px-4 text-[#9CA3AF] text-center"
+        aria-live="polite"
+      >
+        <mat-icon class="opacity-50 !text-[32px] !w-8 !h-8" aria-hidden="true">inbox</mat-icon>
+        <p class="m-0 text-[0.85rem]">No tasks yet</p>
+      </div>
+    }
+  </div>
+</section>

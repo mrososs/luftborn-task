@@ -1,0 +1,11 @@
+<div class="search-input">
+  <mat-icon class="search-input__icon" aria-hidden="true">search</mat-icon>
+  <input
+    class="search-input__field"
+    type="text"
+    [placeholder]="placeholder()"
+    (input)="onInput($event)"
+    aria-label="Search"
+    autocomplete="off"
+  />
+</div>
