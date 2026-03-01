@@ -1,12 +1,18 @@
 <div class="w-full" aria-label="Kanban task board" cdkDropListGroup>
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
+  <div
+    class="grid gap-5 items-start"
+    [class.grid-cols-1]="store.activeFilter() !== 'all'"
+    [class.md:grid-cols-3]="store.activeFilter() === 'all'"
+  >
     @for (col of columnConfig; track col.id) {
-      <app-kanban-column
-        [columnId]="col.id"
-        [columnLabel]="col.label"
-        [tasks]="getTasksForColumn(col.id)"
-        (dropped)="onDrop($event, col.id)"
-      />
+      @if (isColumnVisible(col.id)) {
+        <app-kanban-column
+          [columnId]="col.id"
+          [columnLabel]="col.label"
+          [tasks]="getTasksForColumn(col.id)"
+          (dropped)="onDrop($event, col.id)"
+        />
+      }
     }
   </div>
 </div>

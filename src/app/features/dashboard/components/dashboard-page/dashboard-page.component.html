@@ -10,7 +10,7 @@
   >
     <mat-button-toggle-group
       class="dashboard-filters"
-      [value]="activeFilter()"
+      [value]="store.activeFilter()"
       (change)="onFilterChange($event.value)"
       aria-label="Filter tasks by status"
       hideSingleSelectionIndicator
@@ -22,11 +22,24 @@
       }
     </mat-button-toggle-group>
 
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-4">
+      <!-- Priority Filter Select -->
+      <mat-form-field appearance="outline" class="priority-filter">
+        <mat-select
+          placeholder="Filter by Priority"
+          [value]="store.priorityFilter() ?? ''"
+          (selectionChange)="onPriorityChange($event.value)"
+        >
+          @for (option of priorityOptions; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
       <button
         mat-flat-button
         color="primary"
-        class="!font-semibold !rounded-lg"
+        class="!font-semibold !rounded-lg h-[40px]"
         aria-label="Create a new task"
         (click)="openAddTaskDialog()"
       >
@@ -38,6 +51,6 @@
 
   <!-- Kanban board -->
   <div class="min-h-[400px]">
-    <app-kanban-board [activeFilter]="activeFilter()" />
+    <app-kanban-board />
   </div>
 </section>

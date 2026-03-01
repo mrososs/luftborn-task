@@ -22,6 +22,9 @@ export class HeaderComponent {
   protected readonly authService = inject(AuthService);
   protected readonly notificationService = inject(NotificationService);
 
+  /** Emitted when the mobile menu button is clicked */
+  readonly menuClick = output<void>();
+
   /** Emitted when the user types in the global search input */
   readonly searchChange = output<string>();
 

@@ -46,6 +46,7 @@
     "@angular/cli": "^21.0.0",
     "@angular/compiler-cli": "^21.0.0",
     "@angular/material": "^21.2.0",
+    "@angular/platform-browser-dynamic": "^21.2.0",
     "@tailwindcss/postcss": "^4.1.12",
     "angular-eslint": "21.2.0",
     "angular-in-memory-web-api": "^0.21.0",

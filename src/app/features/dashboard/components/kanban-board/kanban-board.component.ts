@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { CdkDropListGroup } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,9 +22,6 @@ export class KanbanBoardComponent {
   protected readonly store = inject(KanbanBoardStore);
   private readonly taskDialogService = inject(TaskDialogService);
 
-  /** Active board filter passed from the dashboard page */
-  readonly activeFilter = input<string>('all');
-
   /** Emitted so parent (DashboardPage) can show stats derived from store counts */
   readonly statsUpdated = output<void>();
 
@@ -42,6 +39,12 @@ export class KanbanBoardComponent {
     if (col === 'todo') return this.store.todoTasks();
     if (col === 'in-progress') return this.store.inProgressTasks();
     return this.store.doneTasks();
+  }
+
+  /** Returns whether a column should be visible based on the active filter */
+  protected isColumnVisible(colId: KanbanColumn): boolean {
+    const active = this.store.activeFilter();
+    return active === 'all' || active === colId;
   }
 
   /** Returns all column IDs except the given one (for cdkDropListConnectedTo) */

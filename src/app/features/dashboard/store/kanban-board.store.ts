@@ -14,7 +14,8 @@ export interface KanbanTask extends Task {
 /** Store state shape */
 interface KanbanBoardState {
   columns: Record<KanbanColumn, KanbanTask[]>;
-  activeFilter: KanbanColumn | null;
+  activeFilter: KanbanColumn | 'all';
+  priorityFilter: TaskPriority | null;
 }
 
 /** Static seed data matching the Figma design */
@@ -151,7 +152,8 @@ const INITIAL_STATE: KanbanBoardState = {
     'in-progress': [...INITIAL_TASKS['in-progress']],
     done: [...INITIAL_TASKS.done],
   },
-  activeFilter: null,
+  activeFilter: 'all',
+  priorityFilter: null,
 };
 
 /**
@@ -164,10 +166,22 @@ export const KanbanBoardStore = signalStore(
   withState<KanbanBoardState>(INITIAL_STATE),
 
   withComputed((store) => ({
-    /** Tasks per column (read from state signal) */
-    todoTasks: computed(() => store.columns()['todo']),
-    inProgressTasks: computed(() => store.columns()['in-progress']),
-    doneTasks: computed(() => store.columns()['done']),
+    /** Tasks per column (read from state signal) filtered by priority */
+    todoTasks: computed(() => {
+      const tasks = store.columns()['todo'];
+      const priority = store.priorityFilter();
+      return priority ? tasks.filter((t) => t.priority === priority) : tasks;
+    }),
+    inProgressTasks: computed(() => {
+      const tasks = store.columns()['in-progress'];
+      const priority = store.priorityFilter();
+      return priority ? tasks.filter((t) => t.priority === priority) : tasks;
+    }),
+    doneTasks: computed(() => {
+      const tasks = store.columns()['done'];
+      const priority = store.priorityFilter();
+      return priority ? tasks.filter((t) => t.priority === priority) : tasks;
+    }),
 
     /** Column counts */
     todoCnt: computed(() => store.columns()['todo'].length),
@@ -251,8 +265,13 @@ export const KanbanBoardStore = signalStore(
     },
 
     /** Sets the active column filter */
-    setFilter(filter: KanbanColumn | null): void {
+    setFilter(filter: KanbanColumn | 'all'): void {
       patchState(store, { activeFilter: filter });
+    },
+
+    /** Sets the priority filter */
+    setPriorityFilter(priority: TaskPriority | null): void {
+      patchState(store, { priorityFilter: priority });
     },
   })),
 );

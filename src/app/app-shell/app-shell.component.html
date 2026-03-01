@@ -1,27 +1,62 @@
-<div class="flex flex-col min-h-screen bg-[#F5F7FA]">
-  <!-- Sticky top header -->
-  <app-header
-    class="sticky top-0 z-[100] shrink-0"
-    (searchChange)="onSearchChange($event)"
-    (notificationClick)="onNotificationClick()"
-  />
+<mat-drawer-container class="min-h-screen bg-[#F5F7FA]" [hasBackdrop]="true">
+  <!-- Sidebar Drawer (Start) -->
+  <mat-drawer
+    #sidebarDrawer
+    mode="over"
+    position="start"
+    class="w-[260px] bg-white border-r border-[#E0E0E0]"
+    [opened]="isSidebarOpen()"
+    (closedStart)="closeSidebar()"
+  >
+    <app-sidebar [navItems]="navItems" />
+  </mat-drawer>
 
-  <div class="flex flex-1 overflow-hidden">
-    <!-- Fixed-width sidebar -->
-    <aside
-      class="w-[240px] shrink-0 sticky top-16 overflow-y-auto hidden md:block"
-      aria-label="Sidebar navigation"
-    >
-      <app-sidebar [navItems]="navItems" />
-    </aside>
+  <!-- Notifications Drawer (End) -->
+  <mat-drawer
+    #notificationDrawer
+    mode="over"
+    position="end"
+    class="w-[320px] bg-white border-l border-[#E0E0E0]"
+    [opened]="isNotificationsOpen()"
+    (closedStart)="isNotificationsOpen.set(false)"
+  >
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-lg font-bold text-[#212121] m-0">Notifications</h2>
+        <button mat-icon-button (click)="isNotificationsOpen.set(false)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <p class="text-sm text-[#6B7280]">No new notifications.</p>
+    </div>
+  </mat-drawer>
 
-    <!-- Main scrollable content area -->
-    <main
-      class="flex-1 p-8 overflow-y-auto min-w-0 focus:outline-none"
-      id="main-content"
-      tabindex="-1"
-    >
-      <router-outlet />
-    </main>
-  </div>
-</div>
+  <mat-drawer-content class="flex flex-col h-screen overflow-hidden">
+    <!-- Sticky top header -->
+    <app-header
+      class="shrink-0"
+      (searchChange)="onSearchChange($event)"
+      (notificationClick)="toggleNotifications()"
+      (menuClick)="toggleSidebar()"
+    />
+
+    <div class="flex flex-1 overflow-hidden relative">
+      <!-- Desktop Sidebar (Visible only on md+) -->
+      <aside
+        class="hidden md:block w-[260px] bg-white border-r border-[#E0E0E0] shrink-0 overflow-y-auto"
+        aria-label="Sidebar navigation"
+      >
+        <app-sidebar [navItems]="navItems" />
+      </aside>
+
+      <!-- Main scrollable content area -->
+      <main
+        class="flex-1 p-4 md:p-8 overflow-y-auto min-w-0 focus:outline-none"
+        id="main-content"
+        tabindex="-1"
+      >
+        <router-outlet />
+      </main>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>
