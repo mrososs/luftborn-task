@@ -6,6 +6,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { StatsOverviewComponent } from '../stats-overview/stats-overview.component';
 import { KanbanBoardComponent } from '../kanban-board/kanban-board.component';
+import { TaskSearchComponent } from '../task-search/task-search.component';
 import { KanbanBoardStore } from '../../store/kanban-board.store';
 import { TaskPriority } from '../../../../models/task.model';
 
@@ -23,6 +24,7 @@ export type BoardFilter = 'all' | 'todo' | 'in-progress' | 'done';
   imports: [
     StatsOverviewComponent,
     KanbanBoardComponent,
+    TaskSearchComponent,
     MatButtonToggleModule,
     MatButtonModule,
     MatIconModule,

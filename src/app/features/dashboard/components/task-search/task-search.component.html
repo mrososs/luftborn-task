@@ -1,0 +1,23 @@
+<div class="task-search-container relative w-full sm:max-w-[400px]">
+  <mat-form-field appearance="outline" class="w-full !pb-0" subscriptSizing="dynamic">
+    <mat-label>Search tasks...</mat-label>
+    <mat-icon matPrefix class="text-gray-400 mr-2">search</mat-icon>
+    <input
+      matInput
+      [formControl]="searchControl"
+      placeholder="Try 'budget' or 'homepage'"
+      aria-label="Search tasks"
+    />
+    @if (searchControl.value) {
+      <button
+        matSuffix
+        mat-icon-button
+        aria-label="Clear search"
+        (click)="clearSearch()"
+        class="text-gray-400 hover:text-gray-600 transition-colors"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </mat-form-field>
+</div>

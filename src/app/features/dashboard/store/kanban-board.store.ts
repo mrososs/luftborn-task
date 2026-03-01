@@ -16,6 +16,7 @@ interface KanbanBoardState {
   columns: Record<KanbanColumn, KanbanTask[]>;
   activeFilter: KanbanColumn | 'all';
   priorityFilter: TaskPriority | null;
+  searchQuery: string;
 }
 
 /** Static seed data matching the Figma design */
@@ -154,6 +155,7 @@ const INITIAL_STATE: KanbanBoardState = {
   },
   activeFilter: 'all',
   priorityFilter: null,
+  searchQuery: '',
 };
 
 /**
@@ -166,21 +168,48 @@ export const KanbanBoardStore = signalStore(
   withState<KanbanBoardState>(INITIAL_STATE),
 
   withComputed((store) => ({
-    /** Tasks per column (read from state signal) filtered by priority */
+    /** Tasks per column (read from state signal) filtered by priority and search */
     todoTasks: computed(() => {
       const tasks = store.columns()['todo'];
       const priority = store.priorityFilter();
-      return priority ? tasks.filter((t) => t.priority === priority) : tasks;
+      const query = store.searchQuery().toLowerCase();
+
+      let filtered = priority ? tasks.filter((t) => t.priority === priority) : tasks;
+      if (query) {
+        filtered = filtered.filter(
+          (t) =>
+            t.title.toLowerCase().includes(query) || t.description?.toLowerCase().includes(query),
+        );
+      }
+      return filtered;
     }),
     inProgressTasks: computed(() => {
       const tasks = store.columns()['in-progress'];
       const priority = store.priorityFilter();
-      return priority ? tasks.filter((t) => t.priority === priority) : tasks;
+      const query = store.searchQuery().toLowerCase();
+
+      let filtered = priority ? tasks.filter((t) => t.priority === priority) : tasks;
+      if (query) {
+        filtered = filtered.filter(
+          (t) =>
+            t.title.toLowerCase().includes(query) || t.description?.toLowerCase().includes(query),
+        );
+      }
+      return filtered;
     }),
     doneTasks: computed(() => {
       const tasks = store.columns()['done'];
       const priority = store.priorityFilter();
-      return priority ? tasks.filter((t) => t.priority === priority) : tasks;
+      const query = store.searchQuery().toLowerCase();
+
+      let filtered = priority ? tasks.filter((t) => t.priority === priority) : tasks;
+      if (query) {
+        filtered = filtered.filter(
+          (t) =>
+            t.title.toLowerCase().includes(query) || t.description?.toLowerCase().includes(query),
+        );
+      }
+      return filtered;
     }),
 
     /** Column counts */
@@ -272,6 +301,11 @@ export const KanbanBoardStore = signalStore(
     /** Sets the priority filter */
     setPriorityFilter(priority: TaskPriority | null): void {
       patchState(store, { priorityFilter: priority });
+    },
+
+    /** Sets the search query */
+    setSearchQuery(query: string): void {
+      patchState(store, { searchQuery: query });
     },
 
     /**
