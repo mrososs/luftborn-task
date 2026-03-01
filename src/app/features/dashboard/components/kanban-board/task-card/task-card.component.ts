@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { DatePipe, UpperCasePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
 import { KanbanTask } from '../../../store/kanban-board.store';
 
 /**
@@ -12,13 +14,19 @@ import { KanbanTask } from '../../../store/kanban-board.store';
   selector: 'app-task-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DatePipe, UpperCasePipe, MatIconModule],
+  imports: [DatePipe, UpperCasePipe, MatIconModule, MatMenuModule, MatButtonModule],
   templateUrl: './task-card.component.html',
   styleUrl: './task-card.component.scss',
 })
 export class TaskCardComponent {
   /** The task data to render */
   readonly task = input.required<KanbanTask>();
+
+  /** Emitted when edit action is chosen */
+  readonly editRequested = output<KanbanTask>();
+
+  /** Emitted when delete action is chosen */
+  readonly deleteRequested = output<string>();
 
   /** True if the task's due date is in the past and it's not done */
   readonly isOverdue = computed<boolean>(() => {

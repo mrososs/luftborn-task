@@ -37,7 +37,11 @@
   >
     @for (task of tasks(); track task.id) {
       <div cdkDrag [cdkDragData]="task" class="block">
-        <app-task-card [task]="task" />
+        <app-task-card
+          [task]="task"
+          (editRequested)="editRequested.emit($event)"
+          (deleteRequested)="deleteRequested.emit($event)"
+        />
         <ng-template cdkDragPlaceholder>
           <div class="h-20 border-2 border-dashed border-[#1976D3] bg-[#E8F0FE] rounded-lg"></div>
         </ng-template>

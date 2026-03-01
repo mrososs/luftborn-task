@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { CdkDropListGroup } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,10 +20,7 @@ import { TaskDialogService } from '../../services/task-dialog.service';
 })
 export class KanbanBoardComponent {
   protected readonly store = inject(KanbanBoardStore);
-  private readonly taskDialogService = inject(TaskDialogService);
-
-  /** Emitted so parent (DashboardPage) can show stats derived from store counts */
-  readonly statsUpdated = output<void>();
+  protected readonly taskDialogService = inject(TaskDialogService);
 
   /** CDK drop list IDs for cross-column connection */
   protected readonly columnIds: KanbanColumn[] = ['todo', 'in-progress', 'done'];

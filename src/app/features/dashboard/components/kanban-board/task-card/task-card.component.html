@@ -20,12 +20,24 @@
       {{ (task().priority === 'critical' ? 'HIGH' : task().priority) | uppercase }}
     </span>
     <button
-      class="bg-transparent border-none cursor-pointer p-0.5 rounded text-[#9E9E9E] flex items-center transition-all duration-150 hover:bg-[#F5F5F5] hover:text-[#333] focus-visible:outline-2 focus-visible:outline-[#1976D3]"
+      mat-icon-button
+      [matMenuTriggerFor]="menu"
+      class="!w-7 !h-7 !leading-7 !bg-transparent border-none cursor-pointer p-0 rounded text-[#9E9E9E] flex items-center justify-center transition-all duration-150 hover:bg-[#F5F5F5] hover:text-[#333] focus-visible:outline-2 focus-visible:outline-[#1976D3]"
       aria-label="More options"
       type="button"
     >
       <mat-icon class="!text-[18px] !w-[18px] !h-[18px]">more_horiz</mat-icon>
     </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="editRequested.emit(task())">
+        <mat-icon>edit</mat-icon>
+        <span>Edit</span>
+      </button>
+      <button mat-menu-item (click)="deleteRequested.emit(task().id)">
+        <mat-icon class="text-danger">delete</mat-icon>
+        <span>Delete</span>
+      </button>
+    </mat-menu>
   </div>
 
   <!-- Title & description -->

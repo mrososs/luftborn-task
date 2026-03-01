@@ -11,6 +11,8 @@
           [columnLabel]="col.label"
           [tasks]="getTasksForColumn(col.id)"
           (dropped)="onDrop($event, col.id)"
+          (editRequested)="taskDialogService.openEditTaskDialog($event)"
+          (deleteRequested)="taskDialogService.openDeleteConfirmDialog($event)"
         />
       }
     }

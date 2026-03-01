@@ -273,6 +273,39 @@ export const KanbanBoardStore = signalStore(
     setPriorityFilter(priority: TaskPriority | null): void {
       patchState(store, { priorityFilter: priority });
     },
+
+    /**
+     * Deletes a task from the board.
+     */
+    deleteTask(taskId: string): void {
+      const cols = { ...store.columns() };
+      for (const key in cols) {
+        const columnKey = key as KanbanColumn;
+        cols[columnKey] = cols[columnKey].filter((t) => t.id !== taskId);
+      }
+      patchState(store, { columns: cols });
+    },
+
+    /**
+     * Updates an existing task's data.
+     */
+    updateTask(taskId: string, payload: Partial<KanbanTask>): void {
+      const cols = { ...store.columns() };
+      for (const key in cols) {
+        const columnKey = key as KanbanColumn;
+        const index = cols[columnKey].findIndex((t) => t.id === taskId);
+        if (index !== -1) {
+          cols[columnKey] = [...cols[columnKey]];
+          cols[columnKey][index] = {
+            ...cols[columnKey][index],
+            ...payload,
+            updatedAt: new Date().toISOString(),
+          };
+          break;
+        }
+      }
+      patchState(store, { columns: cols });
+    },
   })),
 );
 

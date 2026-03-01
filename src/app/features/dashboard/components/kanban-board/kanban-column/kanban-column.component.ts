@@ -28,6 +28,12 @@ export class KanbanColumnComponent {
   /** Emitted when a drop event occurs in this column */
   readonly dropped = output<CdkDragDrop<KanbanTask[]>>();
 
+  /** Emitted when a task within this column requests editing */
+  readonly editRequested = output<KanbanTask>();
+
+  /** Emitted when a task within this column requests deletion */
+  readonly deleteRequested = output<string>();
+
   protected onDrop(event: CdkDragDrop<KanbanTask[]>): void {
     this.dropped.emit(event);
   }

@@ -1,12 +1,15 @@
-<h2 mat-dialog-title class="dialog-title">
-  <mat-icon class="dialog-title__icon">add_task</mat-icon>
-  Create New Task
+<h2
+  mat-dialog-title
+  class="flex items-center gap-2.5 text-[1.1rem] font-bold text-[#1a1a2e] px-6 pt-5 pb-2 m-0"
+>
+  <mat-icon class="text-[#0052cc] text-[22px]">{{ isEditMode ? 'edit' : 'add_task' }}</mat-icon>
+  {{ isEditMode ? 'Edit Task' : 'Create New Task' }}
 </h2>
 
-<mat-dialog-content class="dialog-content">
+<mat-dialog-content class="px-6 pt-2 pb-0 overflow-visible">
   <form [formGroup]="form" id="add-task-form" (ngSubmit)="onSubmit()">
     <!-- Title -->
-    <mat-form-field appearance="outline" class="dialog-content__field">
+    <mat-form-field appearance="outline" class="w-full mt-2 mb-4 block">
       <mat-label>Task Title</mat-label>
       <input
         matInput
@@ -21,7 +24,7 @@
     </mat-form-field>
 
     <!-- Description -->
-    <mat-form-field appearance="outline" class="dialog-content__field">
+    <mat-form-field appearance="outline" class="w-full mb-4 block">
       <mat-label>Description (optional)</mat-label>
       <textarea
         matInput
@@ -32,7 +35,7 @@
     </mat-form-field>
 
     <!-- Priority -->
-    <mat-form-field appearance="outline" class="dialog-content__field">
+    <mat-form-field appearance="outline" class="w-full mb-4 block">
       <mat-label>Priority</mat-label>
       <mat-select formControlName="priority" aria-required="true">
         @for (opt of priorityOptions; track opt.value) {
@@ -42,18 +45,18 @@
     </mat-form-field>
 
     <!-- Assignee -->
-    <mat-form-field appearance="outline" class="dialog-content__field">
+    <mat-form-field appearance="outline" class="w-full mb-4 block">
       <mat-label>Assignee Name (optional)</mat-label>
       <input matInput formControlName="assigneeName" placeholder="e.g. Sarah" autocomplete="off" />
     </mat-form-field>
   </form>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end" class="dialog-actions">
+<mat-dialog-actions align="end" class="px-6 pt-2 pb-5 gap-2.5">
   <button
     mat-stroked-button
     type="button"
-    class="dialog-actions__cancel"
+    class="border-[#d1d5db] text-[#374151]"
     aria-label="Cancel and close dialog"
     (click)="onCancel()"
   >
@@ -64,11 +67,11 @@
     color="primary"
     type="submit"
     form="add-task-form"
-    class="dialog-actions__submit"
-    aria-label="Create task"
+    class="flex items-center gap-1 bg-[#0052cc] text-white"
+    aria-label="Submit"
     (click)="onSubmit()"
   >
-    <mat-icon>add</mat-icon>
-    Create Task
+    <mat-icon class="!w-[18px] !h-[18px] !text-[18px]">{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+    {{ isEditMode ? 'Save Changes' : 'Create Task' }}
   </button>
 </mat-dialog-actions>

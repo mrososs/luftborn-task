@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -7,6 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TaskPriority } from '../../../../../models/task.model';
+import { KanbanTask } from '../../../store/kanban-board.store';
 
 export interface KanbanTaskPayload {
   title: string;
@@ -35,9 +36,12 @@ export interface KanbanTaskPayload {
   templateUrl: './kanban-add-task-dialog.component.html',
   styleUrl: './kanban-add-task-dialog.component.scss',
 })
-export class KanbanAddTaskDialogComponent {
+export class KanbanAddTaskDialogComponent implements OnInit {
   private readonly dialogRef = inject(MatDialogRef<KanbanAddTaskDialogComponent>);
+  private readonly data = inject<{ task?: KanbanTask }>(MAT_DIALOG_DATA, { optional: true });
   private readonly fb = inject(FormBuilder);
+
+  protected readonly isEditMode = !!this.data?.task;
 
   protected readonly form: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(3)]],
@@ -45,6 +49,17 @@ export class KanbanAddTaskDialogComponent {
     priority: ['medium' as TaskPriority, Validators.required],
     assigneeName: [''],
   });
+
+  ngOnInit(): void {
+    if (this.data?.task) {
+      this.form.patchValue({
+        title: this.data.task.title,
+        description: this.data.task.description,
+        priority: this.data.task.priority,
+        assigneeName: this.data.task.assigneeName,
+      });
+    }
+  }
 
   protected readonly priorityOptions: { value: TaskPriority; label: string }[] = [
     { value: 'low', label: 'Low' },

@@ -4,9 +4,10 @@ import {
   DashboardPageComponent,
   BoardFilter,
 } from '../components/dashboard-page/dashboard-page.component';
-import { KanbanBoardStore } from '../store/kanban-board.store';
+import { KanbanBoardStore, KanbanTask } from '../store/kanban-board.store';
 import { TaskPriority } from '../../../models/task.model';
 import { KanbanBoardComponent } from '../components/kanban-board/kanban-board.component';
+import { StatsOverviewComponent } from '../components/stats-overview/stats-overview.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { describe, it, expect, beforeEach, vi, beforeAll } from 'vitest';
 import { Component, signal } from '@angular/core';
@@ -19,6 +20,7 @@ beforeAll(() => {
   }
 });
 
+// 1. Mock للـ Kanban Board
 @Component({
   selector: 'app-kanban-board',
   template: '',
@@ -28,21 +30,38 @@ class MockKanbanBoardComponent {
   openAddTaskDialog = vi.fn();
 }
 
+@Component({
+  selector: 'app-stats-overview',
+  template: '',
+  standalone: true,
+})
+class MockStatsOverviewComponent {}
+
 describe('DashboardPageComponent', () => {
   let component: DashboardPageComponent;
   let fixture: ComponentFixture<DashboardPageComponent>;
   let mockStore: {
     activeFilter: ReturnType<typeof signal<BoardFilter>>;
     priorityFilter: ReturnType<typeof signal<TaskPriority | null>>;
+    totalTasks: ReturnType<typeof signal<number>>;
+    todoTasks: ReturnType<typeof signal<KanbanTask[]>>;
+    inProgressTasks: ReturnType<typeof signal<KanbanTask[]>>;
+    doneTasks: ReturnType<typeof signal<KanbanTask[]>>;
     setFilter: ReturnType<typeof vi.fn>;
     setPriorityFilter: ReturnType<typeof vi.fn>;
   };
 
   beforeEach(async () => {
-    // 1. تعديل الـ MockStore ليدعم الـ Signals اللي الـ Template محتاجها
+    // 3. تعريف الـ MockStore بكل الـ Signals اللي الـ Template والـ Children بيحتاجوها
     mockStore = {
-      activeFilter: signal('all'), // ده اللي كان مسبب الـ TypeError
-      priorityFilter: signal(null), // لو الكومبوننت بيستخدمه
+      activeFilter: signal('all'),
+      priorityFilter: signal(null),
+      // الـ Signals دي مهمة جداً عشان StatsOverviewComponent
+      totalTasks: signal(0),
+      todoTasks: signal([]),
+      inProgressTasks: signal([]),
+      doneTasks: signal([]),
+      // الـ Methods
       setFilter: vi.fn(),
       setPriorityFilter: vi.fn(),
     };
@@ -52,8 +71,12 @@ describe('DashboardPageComponent', () => {
       providers: [{ provide: KanbanBoardStore, useValue: mockStore }],
     })
       .overrideComponent(DashboardPageComponent, {
-        remove: { imports: [KanbanBoardComponent] },
-        add: { imports: [MockKanbanBoardComponent] },
+        remove: {
+          imports: [KanbanBoardComponent, StatsOverviewComponent],
+        },
+        add: {
+          imports: [MockKanbanBoardComponent, MockStatsOverviewComponent],
+        },
       })
       .compileComponents();
 
@@ -66,12 +89,8 @@ describe('DashboardPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display static stat cards', () => {
-    expect(component['stats'].length).toBe(4);
-    expect(component['stats'][0].label).toBe('Total Tasks');
-  });
-
   it('should update active filter when onFilterChange is called', () => {
+    // استخدام ['methodName'] للوصول للـ private/protected methods في التست
     component['onFilterChange']('todo');
     expect(mockStore.setFilter).toHaveBeenCalledWith('todo');
   });
@@ -85,13 +104,14 @@ describe('DashboardPageComponent', () => {
   });
 
   it('should delegate openAddTaskDialog to the kanbanBoard child', () => {
-    // 2. بدل ما تعمل new instance يدوي، استخدم الـ mock اللي الأنجيولار عمله فعلاً
+    // تجهيز mock للـ ViewChild
     const mockKanbanBoard = {
       openAddTaskDialog: vi.fn(),
     };
 
-    // بنحقن الـ mock جوه الكومبوننت (الـ ViewChild)
-    component['kanbanBoard'] = mockKanbanBoard as unknown as KanbanBoardComponent;
+    // حقن الـ mock يدوياً داخل الكومبوننت
+    (component as unknown as { kanbanBoard: Partial<KanbanBoardComponent> }).kanbanBoard =
+      mockKanbanBoard as unknown as KanbanBoardComponent;
 
     component['openAddTaskDialog']();
     expect(mockKanbanBoard.openAddTaskDialog).toHaveBeenCalled();

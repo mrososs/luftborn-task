@@ -1,7 +1,15 @@
-<div class="flex gap-6 flex-wrap" role="list" aria-label="Key performance indicators">
-  @for (card of stats(); track card.label) {
-    <div class="flex-1 min-w-[160px]" role="listitem">
-      <app-stat-card [card]="card" />
-    </div>
-  }
+<div class="bg-white rounded-[10px] p-6 border border-[#EBEBEB] w-full h-[300px]">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-[0.9rem] font-bold text-[#1a1a2e] uppercase tracking-wider m-0">
+      Task Distribution Overview
+    </h3>
+  </div>
+  <div class="w-full h-[220px]">
+    <canvas
+      baseChart
+      [data]="barChartData()"
+      [options]="barChartOptions"
+      [type]="barChartType"
+    ></canvas>
+  </div>
 </div>

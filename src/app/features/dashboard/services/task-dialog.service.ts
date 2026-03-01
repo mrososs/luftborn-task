@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { KanbanBoardStore } from '../store/kanban-board.store';
+import { KanbanBoardStore, KanbanTask } from '../store/kanban-board.store';
 
 /**
  * Shared service for opening the Add Task dialog.
@@ -27,6 +27,48 @@ export class TaskDialogService {
             if (payload) {
               this.store.addTask(payload);
               this.snackBar.open('✅ Task created successfully!', 'OK', { duration: 3000 });
+            }
+          });
+      },
+    );
+  }
+
+  /**
+   * Opens the Edit Task dialog and handles the update.
+   */
+  openEditTaskDialog(task: KanbanTask): void {
+    import('../components/kanban-board/kanban-add-task-dialog/kanban-add-task-dialog.component').then(
+      ({ KanbanAddTaskDialogComponent }) => {
+        this.dialog
+          .open(KanbanAddTaskDialogComponent, {
+            width: '480px',
+            disableClose: false,
+            data: { task },
+          })
+          .afterClosed()
+          .subscribe((payload) => {
+            if (payload) {
+              this.store.updateTask(task.id, payload);
+              this.snackBar.open('✅ Task updated successfully!', 'OK', { duration: 3000 });
+            }
+          });
+      },
+    );
+  }
+
+  /**
+   * Opens the Delete confirmation dialog.
+   */
+  openDeleteConfirmDialog(taskId: string): void {
+    import('../components/kanban-board/kanban-delete-confirm-dialog/kanban-delete-confirm-dialog.component').then(
+      ({ KanbanDeleteConfirmDialogComponent }) => {
+        this.dialog
+          .open(KanbanDeleteConfirmDialogComponent, { width: '400px' })
+          .afterClosed()
+          .subscribe((confirmed) => {
+            if (confirmed) {
+              this.store.deleteTask(taskId);
+              this.snackBar.open('🗑️ Task deleted successfully!', 'OK', { duration: 3000 });
             }
           });
       },
