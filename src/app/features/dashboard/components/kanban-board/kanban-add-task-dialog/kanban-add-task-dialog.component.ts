@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TaskPriority } from '../../../../../models/task.model';
 import { KanbanTask } from '../../../store/kanban-board.store';
+import { UserStore } from '../../../store/user.store';
 
 export interface KanbanTaskPayload {
   title: string;
@@ -40,6 +41,7 @@ export class KanbanAddTaskDialogComponent implements OnInit {
   private readonly dialogRef = inject(MatDialogRef<KanbanAddTaskDialogComponent>);
   private readonly data = inject<{ task?: KanbanTask }>(MAT_DIALOG_DATA, { optional: true });
   private readonly fb = inject(FormBuilder);
+  protected readonly userStore = inject(UserStore);
 
   protected readonly isEditMode = !!this.data?.task;
 
@@ -82,7 +84,15 @@ export class KanbanAddTaskDialogComponent implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
-    const payload: KanbanTaskPayload = this.form.getRawValue();
+    const formValue = this.form.getRawValue();
+    const selectedUser = this.userStore.users().find((u) => u.name === formValue.assigneeName);
+
+    const payload: KanbanTaskPayload & { assigneeAvatar?: string } = {
+      ...formValue,
+      assigneeAvatar:
+        selectedUser?.avatarUrl || (formValue.assigneeName || 'Y').charAt(0).toUpperCase(),
+    };
+
     this.dialogRef.close(payload);
   }
 

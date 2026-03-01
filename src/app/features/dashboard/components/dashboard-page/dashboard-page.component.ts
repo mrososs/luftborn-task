@@ -1,14 +1,17 @@
-import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, ViewChild } from '@angular/core';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { StatsOverviewComponent } from '../stats-overview/stats-overview.component';
 import { KanbanBoardComponent } from '../kanban-board/kanban-board.component';
 import { TaskSearchComponent } from '../task-search/task-search.component';
+import { ActivityFeedComponent } from '../activity-feed/activity-feed.component';
 import { KanbanBoardStore } from '../../store/kanban-board.store';
 import { TaskPriority } from '../../../../models/task.model';
+import { CommonModule } from '@angular/common';
 
 /** Active filter tab type */
 export type BoardFilter = 'all' | 'todo' | 'in-progress' | 'done';
@@ -25,17 +28,21 @@ export type BoardFilter = 'all' | 'todo' | 'in-progress' | 'done';
     StatsOverviewComponent,
     KanbanBoardComponent,
     TaskSearchComponent,
+    ActivityFeedComponent,
     MatButtonToggleModule,
     MatButtonModule,
     MatIconModule,
     MatSelectModule,
     MatFormFieldModule,
+    MatTooltipModule,
+    CommonModule,
   ],
   templateUrl: './dashboard-page.component.html',
   styleUrl: './dashboard-page.component.scss',
 })
 export class DashboardPageComponent {
   protected readonly store = inject(KanbanBoardStore);
+  protected readonly showActivityFeed = signal(true);
 
   /** Reference to the kanban board for opening the add-task dialog */
   @ViewChild(KanbanBoardComponent) protected kanbanBoard?: KanbanBoardComponent;

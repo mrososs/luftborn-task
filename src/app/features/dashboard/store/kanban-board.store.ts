@@ -1,6 +1,8 @@
-import { computed } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import { signalStore, withState, withComputed, withMethods, patchState } from '@ngrx/signals';
 import { Task, TaskStatus, TaskPriority } from '../../../models/task.model';
+import { ActivityStore } from './activity.store';
+import { UserStore } from './user.store';
 
 /** Kanban column identifiers */
 export type KanbanColumn = 'todo' | 'in-progress' | 'done';
@@ -233,10 +235,9 @@ export const KanbanBoardStore = signalStore(
     }),
   })),
 
-  withMethods((store) => ({
+  withMethods((store, activityStore = inject(ActivityStore), userStore = inject(UserStore)) => ({
     /**
      * Moves a task between columns (or reorders within the same column).
-     * Called by the CDK drop list handler.
      */
     moveTask(
       previousColumn: KanbanColumn,
@@ -259,6 +260,17 @@ export const KanbanBoardStore = signalStore(
           [currentColumn]: target,
         },
       });
+
+      if (previousColumn !== currentColumn) {
+        activityStore.addActivity({
+          type: 'task_moved',
+          taskId: moved.id,
+          taskTitle: moved.title,
+          userId: userStore.currentUser()?.id || 'system',
+          userName: userStore.currentUser()?.name || 'System',
+          details: `moved from ${previousColumn} to ${currentColumn}`,
+        });
+      }
     },
 
     /**
@@ -291,6 +303,15 @@ export const KanbanBoardStore = signalStore(
           todo: [newTask, ...cols.todo],
         },
       });
+
+      activityStore.addActivity({
+        type: 'task_created',
+        taskId: newTask.id,
+        taskTitle: newTask.title,
+        userId: userStore.currentUser()?.id || 'system',
+        userName: userStore.currentUser()?.name || 'System',
+        details: 'created a new task in To Do',
+      });
     },
 
     /** Sets the active column filter */
@@ -313,11 +334,29 @@ export const KanbanBoardStore = signalStore(
      */
     deleteTask(taskId: string): void {
       const cols = { ...store.columns() };
+      let deletedTask: KanbanTask | undefined;
+
       for (const key in cols) {
         const columnKey = key as KanbanColumn;
-        cols[columnKey] = cols[columnKey].filter((t) => t.id !== taskId);
+        const task = cols[columnKey].find((t) => t.id === taskId);
+        if (task) {
+          deletedTask = task;
+          cols[columnKey] = cols[columnKey].filter((t) => t.id !== taskId);
+          break;
+        }
       }
-      patchState(store, { columns: cols });
+
+      if (deletedTask) {
+        patchState(store, { columns: cols });
+        activityStore.addActivity({
+          type: 'task_deleted',
+          taskId: deletedTask.id,
+          taskTitle: deletedTask.title,
+          userId: userStore.currentUser()?.id || 'system',
+          userName: userStore.currentUser()?.name || 'System',
+          details: 'deleted the task',
+        });
+      }
     },
 
     /**
@@ -325,6 +364,8 @@ export const KanbanBoardStore = signalStore(
      */
     updateTask(taskId: string, payload: Partial<KanbanTask>): void {
       const cols = { ...store.columns() };
+      let updatedTask: KanbanTask | undefined;
+
       for (const key in cols) {
         const columnKey = key as KanbanColumn;
         const index = cols[columnKey].findIndex((t) => t.id === taskId);
@@ -335,10 +376,22 @@ export const KanbanBoardStore = signalStore(
             ...payload,
             updatedAt: new Date().toISOString(),
           };
+          updatedTask = cols[columnKey][index];
           break;
         }
       }
-      patchState(store, { columns: cols });
+
+      if (updatedTask) {
+        patchState(store, { columns: cols });
+        activityStore.addActivity({
+          type: 'task_updated',
+          taskId: updatedTask.id,
+          taskTitle: updatedTask.title,
+          userId: userStore.currentUser()?.id || 'system',
+          userName: userStore.currentUser()?.name || 'System',
+          details: 'updated task details',
+        });
+      }
     },
   })),
 );

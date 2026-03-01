@@ -46,8 +46,21 @@
 
     <!-- Assignee -->
     <mat-form-field appearance="outline" class="w-full mb-4 block">
-      <mat-label>Assignee Name (optional)</mat-label>
-      <input matInput formControlName="assigneeName" placeholder="e.g. Sarah" autocomplete="off" />
+      <mat-label>Assignee</mat-label>
+      <mat-select formControlName="assigneeName" placeholder="Select assignee">
+        @for (user of userStore.users(); track user.id) {
+          <mat-option [value]="user.name">
+            <div class="flex items-center gap-2">
+              <div
+                class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[10px] font-bold"
+              >
+                {{ user.avatarUrl }}
+              </div>
+              {{ user.name }}
+            </div>
+          </mat-option>
+        }
+      </mat-select>
     </mat-form-field>
   </form>
 </mat-dialog-content>

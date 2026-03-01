@@ -1,0 +1,41 @@
+<div class="activity-feed-wrapper h-full flex flex-col gap-4">
+  <div class="flex items-center justify-between px-2">
+    <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+      <mat-icon class="text-primary">history</mat-icon>
+      Recent Activity
+    </h3>
+  </div>
+
+  <div class="activity-list flex-1 overflow-y-auto pr-2 flex flex-col gap-3">
+    @for (activity of activityStore.activities(); track activity.id) {
+      <div
+        class="activity-item flex gap-3 p-3 bg-white rounded-xl border border-gray-100 hover:border-[#196bd2]/20 transition-all cursor-default"
+      >
+        <div
+          class="activity-icon-container shrink-0 w-10 h-10 rounded-full flex items-center justify-center"
+          [ngClass]="colorMap[activity.type]"
+        >
+          <mat-icon>{{ iconMap[activity.type] }}</mat-icon>
+        </div>
+
+        <div class="activity-content flex flex-col gap-1 overflow-hidden">
+          <p class="text-sm font-semibold text-gray-900 truncate">
+            {{ activity.taskTitle }}
+          </p>
+          <p class="text-xs text-gray-500">
+            <span class="font-medium text-gray-700">{{ activity.userName }}</span>
+            {{ activity.details }}
+          </p>
+          <p class="text-[10px] text-gray-400 mt-1">
+            {{ activity.timestamp | date: 'shortTime' }} • {{ activity.timestamp | date: 'MMM d' }}
+          </p>
+        </div>
+      </div>
+    } @empty {
+      <div class="flex flex-col items-center justify-center py-12 text-gray-400 italic">
+        <mat-icon class="!w-12 !h-12 !text-[48px] mb-2 opacity-20">hourglass_empty</mat-icon>
+        <p>No recent activity</p>
+      </div>
+    }
+  </div>
+</div>

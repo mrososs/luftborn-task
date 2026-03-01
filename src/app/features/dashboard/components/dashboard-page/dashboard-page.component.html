@@ -1,58 +1,103 @@
-<section class="flex flex-col gap-6" aria-label="Dashboard overview">
-  <!-- Stats overview row -->
-  <app-stats-overview />
-
-  <!-- Board toolbar: filter tabs + New Task button -->
+<div
+  class="dashboard-layout grid grid-cols-1 xl:grid-cols-[1fr_auto] gap-6 transition-all duration-300"
+>
+  <!-- Main Column -->
   <div
-    class="flex items-center justify-between flex-wrap gap-3 bg-white p-4 rounded-lg"
-    role="toolbar"
-    aria-label="Task board controls"
+    class="main-content-col flex flex-col gap-6 min-w-0"
+    aria-label="Dashboard metrics and board"
   >
-    <mat-button-toggle-group
-      class="dashboard-filters"
-      [value]="store.activeFilter()"
-      (change)="onFilterChange($event.value)"
-      aria-label="Filter tasks by status"
-      hideSingleSelectionIndicator
+    <!-- Stats overview row -->
+    <app-stats-overview />
+
+    <!-- Board toolbar: filter tabs + Search + New Task button -->
+    <div
+      class="flex items-center justify-between flex-wrap gap-3 bg-white p-4 rounded-lg shadow-sm border border-gray-100"
+      role="toolbar"
+      aria-label="Task board controls"
     >
-      @for (tab of filterTabs; track tab.value) {
-        <mat-button-toggle [value]="tab.value" [attr.aria-label]="tab.label">
-          {{ tab.label }}
-        </mat-button-toggle>
-      }
-    </mat-button-toggle-group>
-
-    <app-task-search />
-
-    <div class="flex items-center gap-4">
-      <!-- Priority Filter Select -->
-      <mat-form-field appearance="outline" class="priority-filter">
-        <mat-select
-          placeholder="Filter by Priority"
-          [value]="store.priorityFilter() ?? ''"
-          (selectionChange)="onPriorityChange($event.value)"
-        >
-          @for (option of priorityOptions; track option.value) {
-            <mat-option [value]="option.value">{{ option.label }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-
-      <button
-        mat-flat-button
-        color="primary"
-        class="!font-semibold !rounded-lg h-[40px]"
-        aria-label="Create a new task"
-        (click)="openAddTaskDialog()"
+      <mat-button-toggle-group
+        class="dashboard-filters"
+        [value]="store.activeFilter()"
+        (change)="onFilterChange($event.value)"
+        aria-label="Filter tasks by status"
+        hideSingleSelectionIndicator
       >
-        <mat-icon>add</mat-icon>
-        New Task
-      </button>
+        @for (tab of filterTabs; track tab.value) {
+          <mat-button-toggle [value]="tab.value" [attr.aria-label]="tab.label">
+            {{ tab.label }}
+          </mat-button-toggle>
+        }
+      </mat-button-toggle-group>
+
+      <app-task-search />
+
+      <div class="flex items-center gap-4">
+        <mat-form-field appearance="outline" class="priority-filter">
+          <mat-select
+            placeholder="Filter by Priority"
+            [value]="store.priorityFilter() ?? ''"
+            (selectionChange)="onPriorityChange($event.value)"
+          >
+            @for (option of priorityOptions; track option.value) {
+              <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <button
+          mat-flat-button
+          color="primary"
+          class="!font-semibold !rounded-lg h-[40px]"
+          aria-label="Create a new task"
+          (click)="openAddTaskDialog()"
+        >
+          <mat-icon>add</mat-icon>
+          New Task
+        </button>
+      </div>
+    </div>
+
+    <!-- Kanban board -->
+    <div class="min-h-[400px]">
+      <app-kanban-board />
     </div>
   </div>
 
-  <!-- Kanban board -->
-  <div class="min-h-[400px]">
-    <app-kanban-board />
-  </div>
-</section>
+  <!-- Activity Sidebar -->
+  <aside
+    class="activity-sidebar-col sticky top-6 h-[calc(100vh-100px)] flex flex-col hidden xl:flex transition-all duration-300 ease-in-out border-l border-gray-100 pl-4 bg-gray-50/30 rounded-r-xl"
+    [style.width]="showActivityFeed() ? '320px' : '48px'"
+  >
+    <div class="flex items-center justify-between mb-4 h-10">
+      <h3
+        class="text-sm font-bold text-gray-800 transition-opacity duration-200"
+        [ngClass]="showActivityFeed() ? 'opacity-100' : 'opacity-0 w-0 overflow-hidden px-0'"
+      >
+        Activity Feed
+      </h3>
+      <button
+        mat-icon-button
+        (click)="showActivityFeed.set(!showActivityFeed())"
+        class="toggle-feed-btn !bg-white shadow-sm border border-gray-200 !w-8 !h-8 !leading-8"
+        [matTooltip]="showActivityFeed() ? 'Collapse feed' : 'Expand feed'"
+      >
+        <mat-icon
+          class="!text-[18px] !w-[18px] !h-[18px] !m-0 transition-transform duration-300"
+          [class.rotate-180]="!showActivityFeed()"
+          >chevron_right</mat-icon
+        >
+      </button>
+    </div>
+
+    <div
+      class="flex-1 transition-all duration-300 origin-right overflow-hidden"
+      [ngClass]="
+        showActivityFeed()
+          ? 'opacity-100 translate-x-0'
+          : 'opacity-0 translate-x-4 pointer-events-none'
+      "
+    >
+      <app-activity-feed />
+    </div>
+  </aside>
+</div>
